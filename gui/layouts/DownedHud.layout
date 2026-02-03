@@ -17,7 +17,7 @@ FrameWidgetClass rootFrame {
    vexactpos 0
    hexactsize 1
    vexactsize 1
-   image0 "BBD_VignettesDownedButNotOut\gui\layouts\downed_icon.edds"
+   image0 "DownedButNotOut\gui\layouts\downed_icon.edds"
    mode blend
    "src alpha" 1
    "clamp mode" clamp
