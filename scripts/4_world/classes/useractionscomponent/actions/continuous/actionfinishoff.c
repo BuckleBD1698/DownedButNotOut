@@ -39,7 +39,7 @@ class ActionFinishOff : ActionContinuousBase
 		if (!targetPlayer) return false;
 
 		// Can only finish off downed players
-		return targetPlayer.BBD_IsDowned();
+		return targetPlayer.IsDowned();
 	}
 
 	override void OnFinishProgressServer(ActionData action_data)

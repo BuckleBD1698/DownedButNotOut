@@ -1,41 +1,41 @@
 modded class PlayerBase
 {
-	protected bool 		m_BBD_IsDowned;
-	protected float 	m_BBD_DownedTimer;
-	static const int 	RPC_BBD_DOWNED_MESSAGE = 492381;
+	protected bool 		m_IsDowned;
+	protected float 	m_DownedTimer;
+	static const int 	RPC_DOWNED_MESSAGE = 492381;
 	
 	void PlayerBase()
 	{
-		RegisterNetSyncVariableBool("m_BBD_IsDowned");
-		m_BBD_IsDowned 		= false;
-		m_BBD_DownedTimer 	= 0;
+		RegisterNetSyncVariableBool("m_IsDowned");
+		m_IsDowned 		= false;
+		m_DownedTimer 	= 0;
 	}
 
-	bool BBD_IsDowned()
+	bool IsDowned()
 	{
-		return m_BBD_IsDowned;
+		return m_IsDowned;
 	}
 
-	void BBD_SetDowned(bool state, bool resetTimer = true)
+	void SetDowned(bool state, bool resetTimer = true)
 	{
-		m_BBD_IsDowned = state;
+		m_IsDowned = state;
 		SetSynchDirty();
 		
-		if (m_BBD_IsDowned)
+		if (m_IsDowned)
 		{			
 			// only reset the timer if this is a fresh event (not loading from DB)
 			if (resetTimer)
 			{
-				m_BBD_DownedTimer = GetDownedButNotOutDefaults().downedTime;
+				m_DownedTimer = GetDownedButNotOutDefaults().downedTime;
 
-				if (m_BBD_DownedTimer == -1)
-					m_BBD_DownedTimer = 60.0;			
+				if (m_DownedTimer == -1)
+					m_DownedTimer = 60.0;			
 			}
 			
 			if (GetGame().IsServer() && GetIdentity())
 			{
-				Param1<float> p = new Param1<float>(m_BBD_DownedTimer);
-				GetGame().RPCSingleParam(this, RPC_BBD_DOWNED_MESSAGE, p, true, GetIdentity());
+				Param1<float> p = new Param1<float>(m_DownedTimer);
+				GetGame().RPCSingleParam(this, RPC_DOWNED_MESSAGE, p, true, GetIdentity());
 				GetGame().GetSoundScene().SetSoundVolume(0.25,1);
 			}
 			
@@ -50,9 +50,9 @@ modded class PlayerBase
 		}
 	}
 
-	void BBD_Revive()
+	void Revive()
 	{
-		BBD_SetDowned(false);
+		SetDowned(false);
 		
 		// give a little health bump on revive - MAYBE REMOVE THIS
 		SetHealth("", "", 25.0);
@@ -65,8 +65,8 @@ modded class PlayerBase
 	{
 		super.OnStoreSave(ctx);
 		
-		ctx.Write(m_BBD_IsDowned);
-		ctx.Write(m_BBD_DownedTimer);
+		ctx.Write(m_IsDowned);
+		ctx.Write(m_DownedTimer);
 	}
 
 	override bool OnStoreLoad(ParamsReadContext ctx, int version)
@@ -74,11 +74,11 @@ modded class PlayerBase
 		if (!super.OnStoreLoad(ctx, version))
 			return false;
 
-		if (!ctx.Read(m_BBD_IsDowned))
-			m_BBD_IsDowned = false;
+		if (!ctx.Read(m_IsDowned))
+			m_IsDowned = false;
 			
-		if (!ctx.Read(m_BBD_DownedTimer))
-			m_BBD_DownedTimer = 0;
+		if (!ctx.Read(m_DownedTimer))
+			m_DownedTimer = 0;
 			
 		return true;
 	}
@@ -87,8 +87,8 @@ modded class PlayerBase
 	{
 		super.AfterStoreLoad();
 
-		if (m_BBD_IsDowned)
-			BBD_SetDowned(true, false); 
+		if (m_IsDowned)
+			SetDowned(true, false); 
 
 	}
 
@@ -98,7 +98,7 @@ modded class PlayerBase
 
 		if (IsControlledPlayer())
 		{
-			if (m_BBD_IsDowned)
+			if (m_IsDowned)
 			{
 				HumanCommandMove cm = GetCommand_Move();
 
@@ -114,7 +114,7 @@ modded class PlayerBase
 	{
 		super.OnRPC(sender, rpc_type, ctx);
 
-		if (rpc_type == RPC_BBD_DOWNED_MESSAGE)
+		if (rpc_type == RPC_DOWNED_MESSAGE)
 		{
 			Param1<float> p = new Param1<float>(0);
 			if (!ctx.Read(p)) return;
@@ -149,7 +149,7 @@ modded class PlayerBase
 		if (source == this)
 			return super.EEOnDamageCalculated(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
-		if (m_BBD_IsDowned)
+		if (m_IsDowned)
 		{
 			float currentHealth = GetHealth("", "Health");
 			float incomingDamage = damageResult.GetDamage("", "Health");
@@ -168,7 +168,7 @@ modded class PlayerBase
 			Print("[VignettesDownedButNotOut] DOWNED STATE TRIGGERED: " + victimInfo + " was downed by " + attackerInfo);
 
 			// downed state trigger, reset timer = true
-			BBD_SetDowned(true, true);
+			SetDowned(true, true);
 			
 			SetHealth("", "Health", 5.0);
 
@@ -188,11 +188,11 @@ modded class PlayerBase
 	{
 		super.OnScheduledTick(deltaTime);
 		
-		if (GetGame().IsServer() && m_BBD_IsDowned)
+		if (GetGame().IsServer() && m_IsDowned)
 		{
-			m_BBD_DownedTimer -= deltaTime;
+			m_DownedTimer -= deltaTime;
 			
-			if (m_BBD_DownedTimer <= 0)
+			if (m_DownedTimer <= 0)
 			{
 				string victimInfo = "Unknown";
 
@@ -226,19 +226,19 @@ modded class PlayerBase
 
 	override bool CanJump()
 	{
-		if (m_BBD_IsDowned) return false;
+		if (m_IsDowned) return false;
 		return super.CanJump();
 	}
 
 	override bool CanSprint()
 	{
-		if (m_BBD_IsDowned) return false;
+		if (m_IsDowned) return false;
 		return super.CanSprint();
 	}
 
 	override bool CanChangeStance(int previousStance, int newStance)
 	{
-		if (m_BBD_IsDowned)
+		if (m_IsDowned)
 		{
 			if (newStance == DayZPlayerConstants.STANCEIDX_PRONE)
 				return true;

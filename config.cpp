@@ -1,6 +1,6 @@
 class CfgPatches
 {
-	class BBD_VignettesDownedButNotOut
+	class DownedButNotOut
 	{
 		units[]={};
 		weapons[]={};
@@ -15,9 +15,9 @@ class CfgPatches
 
 class CfgMods
 {
-	class BBD_VignettesDownedButNotOut_Mod
+	class DownedButNotOut_Mod
 	{
-		dir 		= "BBD_VignettesDownedButNotOut";
+		dir 		= "DownedButNotOut";
 		name 		= "";
 		author 		= "BuckleBD";
 		credits 	= "";
@@ -39,17 +39,17 @@ class CfgMods
 			class gameScriptModule
 			{
 				value = "";
-				files[] = {"BBD_VignettesDownedButNotOut/scripts/3_game"};
+				files[] = {"DownedButNotOut/scripts/3_game"};
 			};
 			class worldScriptModule
 			{
 				value = "";
-				files[] = {"BBD_VignettesDownedButNotOut/scripts/4_world"};
+				files[] = {"DownedButNotOut/scripts/4_world"};
 			};
 			class missionScriptModule
 			{
 				value = "";
-				files[] = {"BBD_VignettesDownedButNotOut/scripts/5_mission"};
+				files[] = {"DownedButNotOut/scripts/5_mission"};
 			};
 		};
 	};

@@ -1,6 +1,6 @@
 modded class MissionGameplay
 {
-    protected ref DownedHudWidget m_BBD_DownedWidget;
+    protected ref DownedHudWidget m_DownedWidget;
 
     void MissionGameplay()
     {
@@ -11,28 +11,26 @@ modded class MissionGameplay
     {
         super.OnInit();
         
-        if (!m_BBD_DownedWidget)
-        {
-             m_BBD_DownedWidget = new DownedHudWidget();
-        }
+        if (!m_DownedWidget)
+            m_DownedWidget = new DownedHudWidget();
     }
 
     override void OnUpdate(float timeslice)
     {
         super.OnUpdate(timeslice);
 
-        if (m_BBD_DownedWidget)
+        if (m_DownedWidget)
         {
             PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
             
             if (player)
             {
-                bool isDowned = player.BBD_IsDowned();
-                m_BBD_DownedWidget.SetVisible(isDowned);
+                bool isDowned = player.IsDowned();
+                m_DownedWidget.SetVisible(isDowned);
             }
             else
             {
-                m_BBD_DownedWidget.SetVisible(false);
+                m_DownedWidget.SetVisible(false);
             }
         }
     }

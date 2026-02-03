@@ -38,7 +38,7 @@ class ActionRevive : ActionContinuousBase
 		PlayerBase targetPlayer = PlayerBase.Cast(target.GetObject());
 		if (!targetPlayer) return false;
 
-		return targetPlayer.BBD_IsDowned();
+		return targetPlayer.IsDowned();
 	}
 
 	override void OnFinishProgressServer(ActionData action_data)
@@ -46,7 +46,7 @@ class ActionRevive : ActionContinuousBase
 		PlayerBase targetPlayer = PlayerBase.Cast(action_data.m_Target.GetObject());
 		if (targetPlayer)
 		{
-			targetPlayer.BBD_Revive();
+			targetPlayer.Revive();
 		}
 	}
 }

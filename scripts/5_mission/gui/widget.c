@@ -4,7 +4,7 @@ class DownedHudWidget
 
     void DownedHudWidget()
     {
-        string layoutPath = "BBD_VignettesDownedButNotOut/gui/layouts/DownedHud.layout";
+        string layoutPath = "DownedButNotOut/gui/layouts/DownedHud.layout";
         
         m_RootWidget = GetGame().GetWorkspace().CreateWidgets(layoutPath);
         
